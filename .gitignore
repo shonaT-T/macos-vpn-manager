@@ -1,0 +1,18 @@
+# 实际配置文件（含敏感信息：密码、TOTP 密钥）
+config.yaml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

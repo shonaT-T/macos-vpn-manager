@@ -1,0 +1,63 @@
+# ============================================
+# VPN Manager 配置文件
+# ============================================
+# 配置文件路径：~/.vpn-manager/config.yaml
+# 修改后在菜单栏点击「重新加载配置」即可生效，无需重启
+# ============================================
+
+# DNS 服务器（修复 DNS 功能使用）
+dns_servers:
+  - "8.8.8.8"
+  - "114.114.114.114"
+
+# 网络服务名称（用于 networksetup 命令）
+network_service: "Wi-Fi"
+
+# VPN 配置列表
+# 每个 VPN 的参数说明：
+#   id          : ASCII 标识符，用于 PID/日志文件名，避免中文路径问题
+#   server      : 服务器地址，格式 https://host:port
+#   user        : 登录用户名
+#   group       : 认证组名（authgroup），不需要则留空
+#   auth_type   : 认证方式 - static(静态密码) / otp(动态密码) / two_pass(双密码)
+#   password    : 静态密码，auth_type 为 static 或 two_pass 时填写
+#   order       : 双密码顺序，仅 two_pass 时有效 - otp_first / pass_first
+#   options     : openconnect 额外参数，如 --servercert pin-sha256:XXXX
+#   totp_secret : TOTP 密钥（Base32），配置后全自动连接无需手动输入动态码
+#                 获取方式：绑定认证器时选「手动输入」复制密钥，
+#                 或解析二维码 otpauth://totp/xxx?secret=XXXXX 中的 secret 值
+vpns:
+  示例VPN:
+    id: example
+    server: "https://vpn.example.com:443"
+    user: "your_username"
+    group: ""
+    auth_type: otp
+    password: ""
+    order: ""
+    options: ""
+    totp_secret: ""
+
+  # 更多 VPN 配置示例：
+  #
+  # 双密码认证VPN:
+  #   id: dual-auth
+  #   server: "https://vpn2.example.com:8443"
+  #   user: "username"
+  #   group: "AuthGroup"
+  #   auth_type: two_pass
+  #   password: "static_password"
+  #   order: otp_first
+  #   options: ""
+  #   totp_secret: "YOUR_BASE32_SECRET"
+  #
+  # 带证书指纹的VPN:
+  #   id: pinned-cert
+  #   server: "https://10.0.0.1:9443"
+  #   user: "username"
+  #   group: ""
+  #   auth_type: otp
+  #   password: ""
+  #   order: ""
+  #   options: "--servercert pin-sha256:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX="
+  #   totp_secret: "YOUR_BASE32_SECRET"
