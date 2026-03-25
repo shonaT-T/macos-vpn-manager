@@ -1,4 +1,4 @@
-# VPN Manager 依赖
+# macOS VPN Manager 依赖
 
 # 核心依赖 - 菜单栏应用框架
 rumps>=0.4.0

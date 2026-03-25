@@ -1,6 +1,6 @@
-# VPN Manager
+# macOS VPN Manager
 
-macOS 菜单栏 VPN 管理应用，支持多 VPN 连接管理。
+macOS 菜单栏 VPN 管理工具，支持多 VPN 连接管理。
 
 ## 功能特性
 
@@ -16,7 +16,7 @@ macOS 菜单栏 VPN 管理应用，支持多 VPN 连接管理。
 ### 1. 安装依赖
 
 ```bash
-cd /path/to/vpn-manager-app
+cd /path/to/macos-vpn-manager
 pip3 install -r requirements.txt
 ```
 
@@ -112,7 +112,7 @@ open dist/
 ### 移动到应用程序
 
 ```bash
-mv "dist/VPN Manager.app" /Applications/
+mv "dist/macOS VPN Manager.app" /Applications/
 ```
 
 ## 开机自启动
@@ -120,7 +120,7 @@ mv "dist/VPN Manager.app" /Applications/
 ### 方法 1：系统设置（推荐）
 
 1. 打开 **系统设置** → **通用** → **登录项**
-2. 点击 **+** 添加 `VPN Manager.app`
+2. 点击 **+** 添加 `macOS VPN Manager.app`
 
 ### 方法 2：LaunchAgent
 
@@ -135,7 +135,7 @@ mv "dist/VPN Manager.app" /Applications/
     <string>com.local.vpnmanager</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Applications/VPN Manager.app/Contents/MacOS/VPN Manager</string>
+        <string>/Applications/macOS VPN Manager.app/Contents/MacOS/macOS VPN Manager</string>
     </array>
     <key>RunAtLoad</key>
     <true/>
@@ -193,7 +193,7 @@ brew install openconnect
 ## 目录结构
 
 ```
-vpn-manager-app/
+macos-vpn-manager/
 ├── vpn_manager.py          # 主程序
 ├── config.example.yaml     # 配置文件模板
 ├── setup.py                # 打包配置

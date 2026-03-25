@@ -1,12 +1,12 @@
 #!/bin/zsh
-# VPN Manager 安装脚本
+# macOS VPN Manager 安装脚本
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-APP_NAME="VPN Manager"
+APP_NAME="macOS VPN Manager"
 
-echo "🚀 VPN Manager 安装脚本"
+echo "🚀 macOS VPN Manager 安装脚本"
 echo "========================"
 echo ""
 
@@ -67,7 +67,7 @@ if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
             echo "🎉 安装完成！"
             echo ""
             echo "启动方式:"
-            echo "  1. 在 Launchpad 中找到 VPN Manager"
+            echo "  1. 在 Launchpad 中找到 macOS VPN Manager"
             echo "  2. 或运行: open '/Applications/$APP_NAME.app'"
             
             # 询问是否立即启动

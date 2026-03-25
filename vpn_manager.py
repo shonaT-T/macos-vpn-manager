@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.11
 """
-VPN Manager - macOS 菜单栏应用
+macOS VPN Manager - macOS 菜单栏应用
 功能：多 VPN 管理、自动重连、状态监控、全自动 OTP 认证
 
 配置文件：~/.vpn-manager/config.yaml
@@ -54,7 +54,7 @@ _DEFAULT_CONFIG = {
 
 _YAML_HEADER = """\
 # ============================================
-# VPN Manager 配置文件
+# macOS VPN Manager 配置文件
 # ============================================
 # 修改后在菜单栏点击「重新加载配置」即可生效，无需重启
 #
@@ -144,11 +144,11 @@ def generate_otp(secret: str) -> str:
 
 
 class VPNManagerApp(rumps.App):
-    """VPN 管理器菜单栏应用"""
+    """macOS VPN Manager 菜单栏应用"""
 
     def __init__(self):
         super().__init__(
-            name="VPN Manager",
+            name="macOS VPN Manager",
             icon=None,
             title="🔒",
             quit_button=None,
@@ -293,12 +293,12 @@ class VPNManagerApp(rumps.App):
         config = VPN_CONFIGS.get(name)
         if not config:
             if not silent:
-                rumps.notification("VPN Manager", "错误", f"未找到配置: {name}")
+                rumps.notification("macOS VPN Manager", "错误", f"未找到配置: {name}")
             return
 
         if self.is_connected(name):
             if not silent:
-                rumps.notification("VPN Manager", name, "已经连接")
+                rumps.notification("macOS VPN Manager", name, "已经连接")
             return
 
         auth_type = config.get("auth_type", "static")
@@ -313,10 +313,10 @@ class VPNManagerApp(rumps.App):
                 otp = generate_otp(totp_secret)
                 if otp:
                     if not silent:
-                        rumps.notification("VPN Manager", f"🔐 {name}", f"已自动生成动态码")
+                        rumps.notification("macOS VPN Manager", f"🔐 {name}", f"已自动生成动态码")
                 else:
                     if not silent:
-                        rumps.notification("VPN Manager", "错误", "自动生成动态码失败")
+                        rumps.notification("macOS VPN Manager", "错误", "自动生成动态码失败")
                     return
             else:
                 # 没有配置 TOTP 密钥，需要手动输入
@@ -338,7 +338,7 @@ class VPNManagerApp(rumps.App):
 
                 otp = response.text.strip()
                 if not otp:
-                    rumps.notification("VPN Manager", "错误", "动态密码不能为空")
+                    rumps.notification("macOS VPN Manager", "错误", "动态密码不能为空")
                     return
 
         # 在后台线程中连接
@@ -423,11 +423,11 @@ class VPNManagerApp(rumps.App):
             # 检查结果并发送通知（通知是线程安全的）
             if self.is_connected(name):
                 if not silent:
-                    rumps.notification("VPN Manager", f"✅ {name}", "连接成功")
+                    rumps.notification("macOS VPN Manager", f"✅ {name}", "连接成功")
             else:
                 if not silent:
                     rumps.notification(
-                        "VPN Manager", f"❌ {name}", "连接失败，请查看日志"
+                        "macOS VPN Manager", f"❌ {name}", "连接失败，请查看日志"
                     )
 
             # 标记需要刷新菜单（由主线程定时器处理）
@@ -435,11 +435,11 @@ class VPNManagerApp(rumps.App):
 
         except subprocess.TimeoutExpired:
             if not silent:
-                rumps.notification("VPN Manager", f"❌ {name}", "连接超时")
+                rumps.notification("macOS VPN Manager", f"❌ {name}", "连接超时")
             self._needs_refresh = True
         except Exception as e:
             if not silent:
-                rumps.notification("VPN Manager", "错误", str(e))
+                rumps.notification("macOS VPN Manager", "错误", str(e))
             self._needs_refresh = True
 
     def disconnect_vpn(self, name: str):
@@ -448,7 +448,7 @@ class VPNManagerApp(rumps.App):
         server = config.get("server", "")
         
         if not self.is_connected(name):
-            rumps.notification("VPN Manager", name, "未连接")
+            rumps.notification("macOS VPN Manager", name, "未连接")
             return
 
         try:
@@ -465,9 +465,9 @@ class VPNManagerApp(rumps.App):
                 for pid in pids:
                     subprocess.run(["sudo", "kill", pid], capture_output=True)
             
-            rumps.notification("VPN Manager", f"🔌 {name}", "已断开")
+            rumps.notification("macOS VPN Manager", f"🔌 {name}", "已断开")
         except Exception as e:
-            rumps.notification("VPN Manager", "错误", str(e))
+            rumps.notification("macOS VPN Manager", "错误", str(e))
 
         self._needs_refresh = True
 
@@ -484,7 +484,7 @@ class VPNManagerApp(rumps.App):
         for f in PID_DIR.glob("*.pid"):
             f.unlink(missing_ok=True)
 
-        rumps.notification("VPN Manager", "全部断开", "所有 VPN 已断开")
+        rumps.notification("macOS VPN Manager", "全部断开", "所有 VPN 已断开")
         self.build_menu()
 
     def fix_dns(self, _):
@@ -496,9 +496,9 @@ class VPNManagerApp(rumps.App):
                 capture_output=True,
                 check=True,
             )
-            rumps.notification("VPN Manager", "DNS 已修复", ", ".join(DNS_SERVERS))
+            rumps.notification("macOS VPN Manager", "DNS 已修复", ", ".join(DNS_SERVERS))
         except Exception as e:
-            rumps.notification("VPN Manager", "错误", str(e))
+            rumps.notification("macOS VPN Manager", "错误", str(e))
 
     def check_network(self, _):
         """检测网络连通性"""
@@ -532,9 +532,9 @@ class VPNManagerApp(rumps.App):
                 rumps.notification("公网 IP", ip, "已复制到剪贴板")
                 subprocess.run(["pbcopy"], input=ip.encode(), check=True)
             else:
-                rumps.notification("VPN Manager", "错误", "无法获取公网 IP")
+                rumps.notification("macOS VPN Manager", "错误", "无法获取公网 IP")
         except Exception as e:
-            rumps.notification("VPN Manager", "错误", str(e))
+            rumps.notification("macOS VPN Manager", "错误", str(e))
 
     def view_log(self, name: str):
         """查看日志"""
@@ -543,13 +543,13 @@ class VPNManagerApp(rumps.App):
         if log_file.exists():
             subprocess.run(["open", "-a", "Console", str(log_file)])
         else:
-            rumps.notification("VPN Manager", name, "日志文件不存在")
+            rumps.notification("macOS VPN Manager", name, "日志文件不存在")
 
     def toggle_auto_reconnect(self, _):
         """切换自动重连"""
         self.auto_reconnect = not self.auto_reconnect
         status = "已开启" if self.auto_reconnect else "已关闭"
-        rumps.notification("VPN Manager", "自动重连", status)
+        rumps.notification("macOS VPN Manager", "自动重连", status)
         self.build_menu()
 
     def open_log_dir(self, _):
@@ -611,10 +611,10 @@ class VPNManagerApp(rumps.App):
             data = load_config()
             apply_config(data)
             self.build_menu()
-            rumps.notification("VPN Manager", "配置已重新加载",
+            rumps.notification("macOS VPN Manager", "配置已重新加载",
                               f"共 {len(VPN_CONFIGS)} 个 VPN")
         except Exception as e:
-            rumps.notification("VPN Manager", "配置加载失败", str(e))
+            rumps.notification("macOS VPN Manager", "配置加载失败", str(e))
 
     def quick_add_vpn(self, _):
         """多步弹窗向导：快速添加一个 VPN 配置"""
@@ -631,10 +631,10 @@ class VPNManagerApp(rumps.App):
             return
         vpn_name = resp.text.strip()
         if not vpn_name:
-            rumps.notification("VPN Manager", "错误", "名称不能为空")
+            rumps.notification("macOS VPN Manager", "错误", "名称不能为空")
             return
         if vpn_name in VPN_CONFIGS:
-            rumps.notification("VPN Manager", "错误", f"「{vpn_name}」已存在")
+            rumps.notification("macOS VPN Manager", "错误", f"「{vpn_name}」已存在")
             return
 
         # Step 2: 服务器地址
@@ -650,7 +650,7 @@ class VPNManagerApp(rumps.App):
             return
         server = resp.text.strip()
         if not server:
-            rumps.notification("VPN Manager", "错误", "服务器地址不能为空")
+            rumps.notification("macOS VPN Manager", "错误", "服务器地址不能为空")
             return
 
         # Step 3: 用户名
@@ -721,10 +721,10 @@ class VPNManagerApp(rumps.App):
             save_config(data)
             apply_config(data)
             self.build_menu()
-            rumps.notification("VPN Manager", f"✅ 已添加「{vpn_name}」",
+            rumps.notification("macOS VPN Manager", f"✅ 已添加「{vpn_name}」",
                               "配置已保存到文件")
         except Exception as e:
-            rumps.notification("VPN Manager", "保存失败", str(e))
+            rumps.notification("macOS VPN Manager", "保存失败", str(e))
 
     def quit_app(self, _):
         """退出应用"""
